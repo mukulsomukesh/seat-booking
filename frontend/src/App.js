@@ -24,7 +24,7 @@ function App() {
     setLoading(false);
 
     try {
-      const response = await axios.get('https://ticket-booking-c1zw.onrender.com/api/seats');
+      const response = await axios.get('https://seat-booking-tg8y.onrender.com/api/seats');
       setLoading(true);
       setData(response.data.availableSeats);
     } catch (error) {

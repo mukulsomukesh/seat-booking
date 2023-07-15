@@ -36,11 +36,61 @@ const bookingController = async (req, res) => {
       }
     }
 
-    // If nearby seats are not available, book in different rows
-    const differentRowSeats = availableSeats.filter(seat => !seat.isBooked).slice(0, numOfSeats);
-    if (differentRowSeats.length === numOfSeats) {
-      await Seat.updateMany({ _id: { $in: differentRowSeats.map(seat => seat._id) } }, { $set: { isBooked: true } });
-      return res.status(200).json({ data: differentRowSeats });
+    // book seats in different nearby row, only if not available in same row
+
+    // find a array for total number of available seats in each row
+    let arr = [];
+    for (let row = 1; row <= rowCount; row++) {
+      const rowSeats = availableSeats.filter(seat => seat.rowNumber === row);
+      const falseCount = rowSeats.reduce((count, seat) => count + (!seat.isBooked ? 1 : 0), 0);
+      arr.push(falseCount);
+    }
+
+    
+    // variables user in below logic
+    let minLength = Infinity;
+    let minStart = -1;
+    let minEnd = -1;
+    let start = 0;
+    let end = 0;
+    let sum = 0;
+
+
+    //  find nearby rows
+    while (end < arr.length) {
+      sum += arr[end];
+
+      while (sum >= numOfSeats) {
+        let length = end - start + 1;
+        if (length < minLength) {
+          minLength = length;
+          minStart = start;
+          minEnd = end;
+        }
+        sum -= arr[start];
+        start++;
+      }
+      end++;
+    }
+
+
+    // final array to update
+    let finalArray = []
+    for (let row = minStart + 1; row <= minEnd + 1; row++) {
+      const rowSeats = availableSeats.filter(seat => { if (seat.rowNumber === row) { finalArray.push(seat) } });
+    }
+    finalArray = finalArray.slice(0, numOfSeats)
+
+    // update seats in nearby row
+    for (let i = 0; i < finalArray.length; i++) {
+      const seat = finalArray[i];
+      seat.isBooked = true;
+      await seat.save();
+    }
+
+    // send response if nearby seats booking done
+    if (finalArray) {
+      return res.status(200).json({ data: finalArray });
     }
 
     // if booking failed

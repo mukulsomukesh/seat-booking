@@ -6,6 +6,14 @@ import Seat from './Seat'
 // Compartment component that displays the seat grid and booking status.
 export default function Compartment({ loading, data }) {
 
+    let booked =0
+    let notBooked =0
+
+    data?.map((item)=>{
+        if(item.isBooked){ booked++ }
+        else { notBooked++ }
+    })
+
     return (
         <Box display={"flex"} justifyContent={"center"} flexDirection={"column"} h="full" gap="2" >
 
@@ -20,7 +28,7 @@ export default function Compartment({ loading, data }) {
             </Grid>
 
             {/* Booking status color lable */}
-            <Flex gap="2" as="b" justify={"space-around"} color={"gray.700"}> <Text w="50%" textAlign={"center"} bg="#FFC107" rounded={"lg"} p="2"> Booked </Text> <Text textAlign={"center"} w="50%" bg="#6CAC48" rounded={"lg"} p="2"> Available </Text> </Flex>
+            <Flex gap="2" as="b" justify={"space-around"} color={"gray.700"}> <Text w="50%" textAlign={"center"} bg="#FFC107" rounded={"lg"} p="2"> Booked Seats = {booked} </Text> <Text textAlign={"center"} w="50%" bg="#6CAC48" rounded={"lg"} p="2"> Available Seats = {notBooked} </Text> </Flex>
         </Box>
     )
 }

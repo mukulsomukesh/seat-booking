@@ -47,7 +47,7 @@ export default function InputBox({ fetchData }) {
     const handelAxiosPost = async () => {
         setBookingProcessing(true)
         try {
-            const response = await axios.post('https://seat-booking-tg8y.onrender.com/api/seats/book', { numOfSeats: numberOfSeat });
+            const response = await axios.post("https://seat-booking-tg8y.onrender.com/api/seats/book", { numOfSeats: numberOfSeat });
             setAxiosResponse(response.data.data)
             fetchData()
             displayToast("success", "Seat successfully booked")
@@ -68,7 +68,7 @@ export default function InputBox({ fetchData }) {
         setResetBookingProcessing(true)
 
         try {
-            const response = await axios.post('https://seat-booking-tg8y.onrender.com/api/seats');
+            const response = await axios.post("https://seat-booking-tg8y.onrender.com/api/seats");
             console.log(response.data)
             fetchData()
             setResetBookingProcessing(false)

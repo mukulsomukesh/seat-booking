@@ -18,8 +18,6 @@ export default function InputBox({ fetchData }) {
 
     /**
      * Displays a toast message.
-     * @param {string} status - Toast status ('success', 'error', 'warning', 'info')
-     * @param {string} message - Message to display in the toast
      */
     function displayToast(status, message) {
         toast({
